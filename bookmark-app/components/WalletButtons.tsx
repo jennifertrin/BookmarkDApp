@@ -1,5 +1,6 @@
 import { useClient, useConnect, useWallet } from "@wallet01/react";
 import { toast } from "react-hot-toast";
+import WalletIcons from "../public/assets/WalletIcons";
 
 const ConnectButtons = () => {
   const { connectors, isAutoConnecting } = useClient();
@@ -16,11 +17,7 @@ const ConnectButtons = () => {
 
   return (
     <div className="flex flex-col">
-      <span className="font-bold text-lg text-center w-full">
-        Choose the desired Wallet
-      </span>
-
-      <div className="grid grid-cols-3 gap-4 items-center mt-5 w-fit justify-center">
+      <div className="grid grid-cols-3 gap-4 items-center mt-5 justify-center">
         {connectors.map((connector) => (
           <button
             key={connector.name}
@@ -31,8 +28,10 @@ const ConnectButtons = () => {
               });
               toast(connector.name);
             }}
-            className="w-32 h-32 p-3 text-lg flex justify-center items-center leading-relaxed aspect-square w-full rounded-lg border border-slate-600 font-bold bg-slate-700"
-          />
+            className="w-full h-32 p-3 text-lg flex justify-center items-center leading-relaxed aspect-square rounded-lg border border-slate-600 bg-slate-700"
+          >
+            {WalletIcons[connector.name] ?? connector.name}
+          </button>
         ))}
       </div>
     </div>
