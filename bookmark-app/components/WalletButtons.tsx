@@ -16,8 +16,8 @@ const ConnectButtons = () => {
   }
 
   return (
-    <div className="flex flex-col">
-      <div className="grid grid-cols-3 gap-4 items-center mt-5 justify-center">
+    <div className="flex flex-col w-1/2">
+      <div className="grid grid-cols-3 gap-10 items-center mt-5 justify-center">
         {connectors.map((connector) => (
           <button
             key={connector.name}
@@ -28,7 +28,7 @@ const ConnectButtons = () => {
               });
               toast(connector.name);
             }}
-            className="w-full h-32 p-3 text-lg flex justify-center items-center leading-relaxed aspect-square rounded-lg border border-slate-600 bg-slate-700"
+            className="w-20 h-20 p-3 text-lg flex justify-center items-center leading-relaxed aspect-square rounded-lg border border-slate-600 bg-slate-700"
           >
             {WalletIcons[connector.name] ?? connector.name}
           </button>
