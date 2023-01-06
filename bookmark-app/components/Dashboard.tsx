@@ -1,14 +1,13 @@
 import React from 'react';
+import { useWallet } from "@wallet01/react";
 
-type DashboardProps = {
-    name: string | null;
-}
-
-const Dashboard = ({name} : DashboardProps) => {
+const Dashboard = () => {
+  const { address, disconnect } = useWallet();
 
   return (
-    <div className="flex flex-col w-1/2 font-body align-middle p-10">
-      <div className="text-xl">{`Welcome to the Dashboard, ${name ? name : 'Community Member'}!`}</div>
+    <div className="flex flex-col w-full font-body p-10">
+      <button className="btn btn-blue right-0" onClick={() => disconnect()}>Disconnect</button>
+      <div className="text-xl align-middle">{`Welcome to the Dashboard, ${address ? address : 'Community Member'}!`}</div>
     </div>
   );
 };

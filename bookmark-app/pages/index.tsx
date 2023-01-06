@@ -4,7 +4,7 @@ import WalletButtons from "../components/WalletButtons";
 import { useWallet } from "@wallet01/react";
 
 export default function Home() {
-  const { isConnected, address } = useWallet();
+  const { isConnected } = useWallet();
 
   return (
     <div className="flex h-screen w-screen">
@@ -14,7 +14,7 @@ export default function Home() {
           <WalletButtons />
         </div>
       ) : (
-        <Dashboard name={address} />
+        <Dashboard />
       )}
     </div>
   );
