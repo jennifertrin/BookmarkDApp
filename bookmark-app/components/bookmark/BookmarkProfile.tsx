@@ -9,6 +9,7 @@ type BookmarkProfileProps = {
 const BookmarkProfile = ({ name, address, iconLink }: BookmarkProfileProps) => {
   return (
     <div className="flex flex-col justify-center max-w-xs shadow-md rounded-xl px-5 py-10 dark:bg-gray-900 dark:text-gray-100">
+      <img src="/assets/bookmark.svg" alt="Subscribe Bookmark icon" className="flex w-8 h-8"/>
       <img
         src={iconLink}
         alt={`${name} Channel Icon`}
