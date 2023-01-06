@@ -10,9 +10,9 @@ const BookmarkList = () => {
   useEffect(() => {
     async function getChannelsData() {
       const channelsData = await PushAPI.channels.search({
-        query: "push", // a search query
-        page: number, // page index
-        limit: 6, // no of items per page
+        query: "push",
+        page: number,
+        limit: 6,
         env: "staging",
       });
       setChannelsData(channelsData);
