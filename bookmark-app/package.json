@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@huddle01/huddle01-iframe": "^0.0.8",
     "@next/font": "13.1.1",
     "@pushprotocol/restapi": "^0.2.2",
     "@types/node": "18.11.18",
@@ -26,6 +27,7 @@
     "react-hot-toast": "^2.4.0",
     "react-paginate": "^8.1.4",
     "react-query": "^3.39.2",
+    "react-router-dom": "^6.6.1",
     "typescript": "4.9.4"
   },
   "devDependencies": {
