@@ -18,6 +18,7 @@ const BookmarkProfile = ({
   const [subscribedChannelsData, setSubscribedChannelsData] = useState<any[]>(
     []
   );
+  const [ensName, setENSName] = useState<string | null>(null);
 
   let provider;
   if (window.ethereum) {
@@ -83,6 +84,17 @@ const BookmarkProfile = ({
     optout;
   }
 
+  useEffect(() => {
+    async function getENSName() {
+      const provider = await ethers.getDefaultProvider();
+      var name = await provider.lookupAddress(address);
+      setENSName(name);
+    }
+    getENSName();
+  }, [address]);
+
+  const shortenedAddress = `${address.slice(0, 5)}...${address.slice(address.length - 4,address.length)}`
+  
   return (
     <div className="flex flex-col justify-center max-w-xs shadow-md rounded-xl px-5 py-10 dark:bg-gray-900 dark:text-gray-100">
       {obj ? (
@@ -112,10 +124,7 @@ const BookmarkProfile = ({
             {name.length > 15 && "..."}
           </h2>
           <p className="text-md dark:text-gray-400">
-            {`${channelAddress.slice(0, 5)}...${channelAddress.slice(
-              channelAddress.length - 4,
-              channelAddress.length
-            )}`}
+            {ensName ? ensName : shortenedAddress}
           </p>
         </div>
       </div>
