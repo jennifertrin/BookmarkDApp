@@ -8,7 +8,6 @@ const BookmarkList = () => {
   const { address } = useWallet();
   const [number, setNumber] = useState<number>(1);
   const [channelsData, setChannelsData] = useState<any[]>([]);
-  const [subscribedChannelsData, setSubscribedChannelsData] = useState<any[]>([]);
 
   useEffect(() => {
     async function getChannelsData() {
@@ -22,17 +21,6 @@ const BookmarkList = () => {
     }
     getChannelsData();
   }, [number, setChannelsData]);
-
-  useEffect(() => {
-    async function getSubscribedChannelsData() {
-      const subscriptions = await PushAPI.user.getSubscriptions({
-        user: `eip155:5:${address}`,
-        env: 'staging'
-      });
-      setSubscribedChannelsData(subscriptions);
-    }
-    getSubscribedChannelsData();
-   }, [address, setSubscribedChannelsData]);
 
   const handlePageClick = (event: {
     selected: number;

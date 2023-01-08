@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import * as PushAPI from "@pushprotocol/restapi";
 import { ethers } from "ethers";
 
@@ -15,6 +15,9 @@ const BookmarkProfile = ({
   iconLink,
   userAddress,
 }: BookmarkProfileProps) => {
+  const [subscribedChannelsData, setSubscribedChannelsData] = useState<any[]>(
+    []
+  );
 
   let provider;
   if (window.ethereum) {
@@ -22,9 +25,27 @@ const BookmarkProfile = ({
   }
 
   const signer: any = useMemo(() => {
-    if (!userAddress) return;
+    if (!userAddress || !provider) return;
     return provider.getSigner();
   }, [userAddress]);
+
+  async function getSubscribedChannelsData() {
+    const subscriptions = await PushAPI.user.getSubscriptions({
+      user: `eip155:5:${userAddress}`,
+      env: "staging",
+    });
+    if (subscriptions) {
+      setSubscribedChannelsData(subscriptions);
+    }
+  }
+
+  useEffect(() => {
+    getSubscribedChannelsData();
+  }, [])
+
+  const obj = useMemo(() => {
+    return subscribedChannelsData.find((o) => o.channel === channelAddress);
+  }, [subscribedChannelsData]);
 
   async function channelOptIn() {
     if (!signer) return;
@@ -32,7 +53,8 @@ const BookmarkProfile = ({
       signer: signer,
       channelAddress: `eip155:5:${channelAddress}`,
       userAddress: `eip155:5:${userAddress}`,
-      onSuccess: () => {
+      onSuccess: async () => {
+        await getSubscribedChannelsData();
         console.log("opt in success");
       },
       onError: (e) => {
@@ -49,25 +71,35 @@ const BookmarkProfile = ({
       signer: signer,
       channelAddress: `eip155:5:${channelAddress}`,
       userAddress: `eip155:5:${userAddress}`,
-      onSuccess: () => {
-        console.log("opt in success");
+      onSuccess: async () => {
+        await getSubscribedChannelsData();
+        console.log("opt out success");
       },
       onError: () => {
-        console.error("opt in error");
+        console.error("opt out error");
       },
       env: "staging",
     });
-    return optout;
+    optout;
   }
 
   return (
     <div className="flex flex-col justify-center max-w-xs shadow-md rounded-xl px-5 py-10 dark:bg-gray-900 dark:text-gray-100">
-      <img
-        src="/assets/bookmark.svg"
-        alt="Subscribe Bookmark icon"
-        className="flex w-8 h-8"
-        onClick={() => channelOptIn()}
-      />
+      {obj ? (
+        <img
+          src="/assets/bookmark-filled.svg"
+          alt="Subscribe Bookmark icon"
+          className="flex w-8 h-8"
+          onClick={() => channelOptOut()}
+        />
+      ) : (
+        <img
+          src="/assets/bookmark.svg"
+          alt="Subscribe Bookmark icon"
+          className="flex w-8 h-8"
+          onClick={() => channelOptIn()}
+        />
+      )}
       <img
         src={iconLink}
         alt={`${name} Channel Icon`}
