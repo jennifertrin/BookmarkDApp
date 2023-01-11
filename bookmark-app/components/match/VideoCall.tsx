@@ -1,5 +1,6 @@
 import React from "react";
 import { HuddleIframe, IframeConfig } from "@huddle01/huddle01-iframe";
+import ChatView from '../chat/ChatView';
 
 type VideoCallProps = {
     walletAddress: string;
@@ -16,6 +17,7 @@ export default function VideoCall({walletAddress} : VideoCallProps) {
     <div className="flex flex-col mx-auto h-screen w-screen">
       <div className="text-xl my-5 mx-auto">You&apos;ve been matched with: {walletAddress}</div>
       <HuddleIframe config={iframeConfig} />
+      <ChatView />
     </div>
   );
 }
