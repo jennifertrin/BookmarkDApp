@@ -59,7 +59,8 @@ export default function ChatView({ walletAddress }: ChatViewProps) {
     const messages = await newConversations.messages();
     setUpdatedMessages(messages);
     return messages;
-  }, []);
+  }, [setUpdatedMessages]);
+
 
   useEffect(() => {
     if (isXmtpClient) {
