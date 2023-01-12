@@ -59,14 +59,14 @@ export default function ChatView({ walletAddress }: ChatViewProps) {
     const messages = await newConversations.messages();
     setUpdatedMessages(messages);
     return messages;
-  }, [setUpdatedMessages]);
+  }, [conversation]);
 
 
   useEffect(() => {
     if (isXmtpClient) {
       messages();
     }
-  }, [isXmtpClient]);
+  }, [isXmtpClient, messages]);
 
   async function sendMessage(textContent: string) {
     const newConversations = await conversation();
@@ -107,6 +107,7 @@ export default function ChatView({ walletAddress }: ChatViewProps) {
               <MessageList>
                 {updatedMessages?.map((message) => (
                   <Message
+                    key={message.id}
                     model={{
                       message: message.content,
                       sentTime: message.sent.toString(),
