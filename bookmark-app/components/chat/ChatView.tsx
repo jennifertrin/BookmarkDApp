@@ -22,8 +22,10 @@ export default function ChatView({ walletAddress }: ChatViewProps) {
   const [isNotOnNetwork, setIsNotOnNetwork] = useState<boolean>(false);
   const { address: userAddress } = useWallet();
 
+  if (!userAddress || !window) return null;
+
   const provider: ethers.providers.Web3Provider | undefined = useMemo(() => {
-    if (window?.ethereum) {
+    if (window.ethereum) {
       return new ethers.providers.Web3Provider(window.ethereum);
     }
   }, []);
@@ -34,7 +36,7 @@ export default function ChatView({ walletAddress }: ChatViewProps) {
   }, [provider, userAddress]);
 
   const conversation = useCallback(async () => {
-    if (!walletAddress) return;
+    if (!walletAddress || !provider || !signer) return;
     try {
       const xmtp = await Client.create(signer);
       if (xmtp) {
