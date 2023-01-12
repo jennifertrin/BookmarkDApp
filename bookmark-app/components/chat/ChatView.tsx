@@ -6,8 +6,8 @@ import {
   Message,
   MessageInput,
 } from "@chatscope/chat-ui-kit-react";
-import { Client } from "@xmtp/xmtp-js";
-import { useCallback, useMemo, useState } from "react";
+import { Client, DecodedMessage } from "@xmtp/xmtp-js";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { ethers } from "ethers";
 import { useWallet } from "@wallet01/react";
 
@@ -17,6 +17,8 @@ type ChatViewProps = {
 
 export default function ChatView({ walletAddress }: ChatViewProps) {
   const [isXmtpClient, setIsXmtpClient] = useState<boolean>(false);
+  const [updatedMessages, setUpdatedMessages] =
+    useState<DecodedMessage[] | null>(null);
   const [isNotOnNetwork, setIsNotOnNetwork] = useState<boolean>(false);
   const { address: userAddress } = useWallet();
 
@@ -54,9 +56,16 @@ export default function ChatView({ walletAddress }: ChatViewProps) {
   const messages = useCallback(async () => {
     const newConversations = await conversation();
     if (!newConversations) return;
-    const messages = await newConversations.messages().then(response => { response });
+    const messages = await newConversations.messages();
+    setUpdatedMessages(messages);
     return messages;
   }, []);
+
+  useEffect(() => {
+    if (isXmtpClient) {
+      messages();
+    }
+  }, [isXmtpClient]);
 
   async function sendMessage(textContent: string) {
     const newConversations = await conversation();
@@ -66,19 +75,25 @@ export default function ChatView({ walletAddress }: ChatViewProps) {
   }
 
   return (
-    <div>
-      {!isXmtpClient && (
-        !isNotOnNetwork ? 
-        <button
-          onClick={() => conversation()}
-          className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
-        > Start Conversation with {walletAddress}
-        </button> : 
+    <div className="w-1/3">
+      {!isXmtpClient &&
+        (!isNotOnNetwork ? (
+          <button
+            onClick={() => conversation()}
+            className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+          >
+            {" "}
+            Start Conversation with {walletAddress}
+          </button>
+        ) : (
+          <div className="flex px-4 w-2/12 flex-wrap">
+            {" "}
+            {walletAddress} is not on the network. You cannot chat with them at
+            the moment
+          </div>
+        ))}
+      {isXmtpClient && (
         <div
-          className="flex px-4 py-2 w-24"
-        > {walletAddress} is not on the network. You cannot chat with them via chat at the moment
-        </div>)}
-        {isXmtpClient && <div
           style={{
             position: "relative",
             height: "700px",
@@ -89,6 +104,21 @@ export default function ChatView({ walletAddress }: ChatViewProps) {
           <MainContainer>
             <ChatContainer>
               <MessageList>
+                {updatedMessages?.map((message) => (
+                  <Message
+                    model={{
+                      message: message.content,
+                      sentTime: message.sent.toString(),
+                      sender: message.senderAddress,
+                      direction:
+                        message.senderAddress.toLowerCase() ===
+                        walletAddress.toLowerCase()
+                          ? "outgoing"
+                          : "incoming",
+                      position: "normal",
+                    }}
+                  />
+                ))}
               </MessageList>
               <MessageInput
                 placeholder="Type message here"
@@ -99,7 +129,8 @@ export default function ChatView({ walletAddress }: ChatViewProps) {
               />
             </ChatContainer>
           </MainContainer>
-        </div>}
+        </div>
+      )}
     </div>
   );
 }
