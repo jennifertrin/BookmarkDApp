@@ -113,7 +113,7 @@ export default function ChatView({
           className="w-full"
           style={{
             position: "relative",
-            height: "700px",
+            height: "600px",
             marginLeft: "2%",
             marginTop: "0px",
             width: "100%",
