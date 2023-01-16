@@ -90,7 +90,7 @@ export default function ChatView({
   }
 
   return (
-    <div className="w-1/4 m-auto mb-4">
+    <div className="w-1/4 mx-auto mb-4">
       {!isXmtpClient ? (
         !isNotOnNetwork ? (
           <button
